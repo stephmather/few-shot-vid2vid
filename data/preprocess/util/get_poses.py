@@ -147,8 +147,8 @@ def run_densepose_cmd(args, video_idx):
     pwd = os.getcwd()
     img_dir = path.join(pwd, args.output_root, args.img_folder, video_idx)
     dp_dir = path.join(pwd, args.output_root, args.densepose_folder, video_idx, 'frame.png')
-    cmd = 'python2 /densepose/tools/infer_simple.py ' \
-          '--cfg /densepose/configs/DensePose_ResNet101_FPN_s1x-e2e.yaml ' \
+    cmd = 'python2 tools/infer_simple.py ' \
+          '--cfg configs/DensePose_ResNet101_FPN_s1x-e2e.yaml ' \
           '--wts https://dl.fbaipublicfiles.com/densepose/DensePose_ResNet101_FPN_s1x-e2e.pkl ' \
           '--output-dir %s %s' % (dp_dir, img_dir)
     # cmd = 'python apply_net.py show configs/densepose_rcnn_R_101_FPN_s1x.yaml ' \
