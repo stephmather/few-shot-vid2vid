@@ -158,4 +158,3 @@ def run_densepose_cmd(args, video_idx):
           + cmd \
           + '; cd %s' % path.join(pwd, args.output_root)
     os.system(cmd)
-    os.system(cmd)
