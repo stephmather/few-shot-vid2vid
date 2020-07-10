@@ -57,9 +57,12 @@ def run_densepose(args, video_idx):
         img_dir = path.join(args.output_root, args.img_folder, video_idx)
         dp_dir = path.join(args.output_root, args.densepose_folder, video_idx)
         img_names = sorted(glob.glob(img_dir + '/*.jpg'))
+        dp_names_len = int(len(sorted(glob.glob(dp_dir + '/frame.png/*.png')))/2)
         dp_names = sorted(glob.glob(dp_dir + '/*.png'))
-
-        if not os.path.isdir(dp_dir) or len(img_names) != len(dp_names):
+        print('len(img_names):', len(img_names))
+        print('len(dp_names):', dp_names_len)
+        
+        if not os.path.isdir(dp_dir) or len(img_names) != dp_names_len:
             makedirs(dp_dir)
 
             # Run densepose.
