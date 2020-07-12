@@ -100,10 +100,14 @@ if __name__ == "__main__":
         video_indices = sorted(glob.glob(path.join(args.output_root,
                                                    args.img_folder, '*')))
         video_indices = [path.basename(p) for p in video_indices]
-
+        #print('video_indices', video_indices)
+        
         # Remove all unusable frames in the sequences.
         for i, video_idx in enumerate(tqdm(video_indices)):
+            print('video_idx', video_idx)
+            
             remove_unusable_frames(args, video_idx)
+            #break
 
     if 'divide_sequences' in args.steps:
         # Finally, divide the remaining sequences into sub-sequences, where
