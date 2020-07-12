@@ -16,11 +16,13 @@ from util.util import remove_frame, get_keypoint_array, get_frame_idx, \
 # Remove invalid frames in the video.
 def remove_invalid_frames(args, video_idx):
     op_dir = path.join(args.output_root, args.openpose_folder, video_idx)
+    #print('op_dir in remove_invalid_frames', op_dir)
     json_paths = sorted(glob.glob(op_dir + '/*.json'))
+    #print('json_paths', json_paths)
     for json_path in json_paths:
         if not is_valid_frame(args, json_path):
-            remove_frame(args, start=json_path)
-
+            break
+            #remove_frame(args, start=json_path)
 
 # Remove static frames in the video if no motion is detected more than
 # max_static_frames.
@@ -43,7 +45,8 @@ def remove_static_frames(args, video_idx):
         else:
             # If static frames longer than max_static_frames, remove them.
             if (end_idx - start_idx) > max_static_frames:
-                remove_frame(args, video_idx, start_idx, end_idx)
+                #remove_frame(args, video_idx, start_idx, end_idx)
+                print("static frames", json_path)
             start_idx = end_idx = i
 
 
@@ -61,12 +64,14 @@ def remove_isolated_frames(args, video_idx):
             if i != end_idx + 1:
                 # Check if this block of frames is longer than min_n_of_frames.
                 if (end_idx - start_idx) < args.min_n_of_frames:
-                    remove_frame(args, video_idx, start_idx, end_idx)
+                    #remove_frame(args, video_idx, start_idx, end_idx)
+                    print("minframesin isolated",json_path )
                 start_idx = i
             end_idx = i
         # Need to check again at the end of sequence.
         if (end_idx - start_idx) < args.min_n_of_frames:
-            remove_frame(args, video_idx, start_idx, end_idx)
+            #remove_frame(args, video_idx, start_idx, end_idx)
+            print("isolated_frame", json_path)
 
 
 # Detect if motion exists between consecutive frames.
@@ -97,8 +102,12 @@ def check_densepose_exists(args, video_idx):
     for json_path in json_paths:
         dp_path = json_path.replace(args.openpose_folder, args.densepose_folder)
         dp_path = dp_path.replace(args.openpose_postfix, args.densepose_postfix)
-        if not os.path.exists(dp_path):
-            remove_frame(args, start=json_path)
+        dp_path = dp_path.replace(video_idx, video_idx + '/frame.png')
+        #print(dp_path)
+        #if not os.path.exists(dp_path):
+            #print("densepose_doesnt exist", json_path)
+            #remove_frame(args, start=json_path)
+            
 
 
 # Check if the frame is valid to use.
@@ -106,8 +115,10 @@ def is_valid_frame(args, img_path):
     if img_path.endswith('.jpg'):
         img_path = img_path.replace(args.img_folder, args.openpose_folder)
         img_path = img_path.replace('.jpg', args.openpose_postfix)
+        print(img_path)
     with open(img_path, encoding='utf-8') as f:
         keypoint_dicts = json.loads(f.read())["people"]
+        #print('len(keypoint_dicts)',len(keypoint_dicts))
     return len(keypoint_dicts) > 0 and is_full_body(keypoint_dicts) and \
         contains_non_overlapping_people(keypoint_dicts)
 
