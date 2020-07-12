@@ -21,8 +21,7 @@ def remove_invalid_frames(args, video_idx):
     #print('json_paths', json_paths)
     for json_path in json_paths:
         if not is_valid_frame(args, json_path):
-            break
-            #remove_frame(args, start=json_path)
+            remove_frame(args, start=json_path)
 
 # Remove static frames in the video if no motion is detected more than
 # max_static_frames.
@@ -45,7 +44,7 @@ def remove_static_frames(args, video_idx):
         else:
             # If static frames longer than max_static_frames, remove them.
             if (end_idx - start_idx) > max_static_frames:
-                #remove_frame(args, video_idx, start_idx, end_idx)
+                remove_frame(args, video_idx, start_idx, end_idx)
                 print("static frames", json_path)
             start_idx = end_idx = i
 
@@ -64,13 +63,13 @@ def remove_isolated_frames(args, video_idx):
             if i != end_idx + 1:
                 # Check if this block of frames is longer than min_n_of_frames.
                 if (end_idx - start_idx) < args.min_n_of_frames:
-                    #remove_frame(args, video_idx, start_idx, end_idx)
+                    remove_frame(args, video_idx, start_idx, end_idx)
                     print("minframesin isolated",json_path )
                 start_idx = i
             end_idx = i
         # Need to check again at the end of sequence.
         if (end_idx - start_idx) < args.min_n_of_frames:
-            #remove_frame(args, video_idx, start_idx, end_idx)
+            remove_frame(args, video_idx, start_idx, end_idx)
             print("isolated_frame", json_path)
 
 
